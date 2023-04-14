@@ -3,7 +3,7 @@ param name string
 param location string = resourceGroup().location
 param tags object = {}
 param containerAppsEnvironmentName string
-param containerRegistryName string
+// param containerRegistryName string
 param imageName string = ''
 param keyVaultName string
 param feedQueueConnectionStringKey string
@@ -20,7 +20,7 @@ module app 'core/host/container-app.bicep' = {
     location: location
     tags: union(tags, { 'azd-service-name': serviceName })
     containerAppsEnvironmentName: containerAppsEnvironmentName
-    containerRegistryName: containerRegistryName
+//    containerRegistryName: containerRegistryName
     containerCpuCoreCount: '1.0'
     containerMemory: '2.0Gi'
     env: [

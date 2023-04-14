@@ -4,7 +4,7 @@ param tags object = {}
 
 param containerAppsEnvironmentName string = ''
 param containerName string = 'main'
-param containerRegistryName string = ''
+//param containerRegistryName string = 'shayne.azurecr.io'
 param env array = []
 param external bool = true
 param imageName string
@@ -18,7 +18,8 @@ param containerCpuCoreCount string = '0.5'
 @description('Memory allocated to a single container instance, e.g. 1Gi')
 param containerMemory string = '1.0Gi'
 
-resource app 'Microsoft.App/containerApps@2022-03-01' = {
+#disable-next-line BCP081
+resource app 'Microsoft.App/containerApps@2022-11-01-preview' = {
   name: name
   location: location
   tags: tags
@@ -32,19 +33,6 @@ resource app 'Microsoft.App/containerApps@2022-03-01' = {
         targetPort: targetPort
         transport: 'auto'
       }
-      secrets: [
-        {
-          name: 'registry-password'
-          value: containerRegistry.listCredentials().passwords[0].value
-        }
-      ]
-      registries: [
-        {
-          server: '${containerRegistry.name}.azurecr.io'
-          username: containerRegistry.name
-          passwordSecretRef: 'registry-password'
-        }
-      ]
     }
     template: {
       containers: [
@@ -67,9 +55,9 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
 }
 
 // 2022-02-01-preview needed for anonymousPullEnabled
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' existing = {
-  name: containerRegistryName
-}
+//resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' existing = {
+//  name: containerRegistryName
+//}
 
 output identityPrincipalId string = managedIdentity ? app.identity.principalId : ''
 output imageName string = imageName

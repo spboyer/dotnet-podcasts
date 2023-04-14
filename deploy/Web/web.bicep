@@ -34,7 +34,7 @@ resource servicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
 }
 
 // Reference existing API Container App to set App Settings
-resource apiContainerApp 'Microsoft.App/containerApps@2022-03-01' existing = {
+resource apiContainerApp 'Microsoft.App/containerApps@2022-11-01-preview' existing = {
   name: apiName
   scope: resourceGroup()
 }

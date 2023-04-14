@@ -3,7 +3,7 @@ param location string = resourceGroup().location
 param tags object = {}
 
 param adminUserEnabled bool = true
-param anonymousPullEnabled bool = false
+param anonymousPullEnabled bool = true
 param dataEndpointEnabled bool = false
 param encryption object = {
   status: 'disabled'

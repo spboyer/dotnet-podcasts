@@ -50,7 +50,7 @@ module containerApps './core/host/container-apps.bicep' = {
   params: {
     name: 'app'
     containerAppsEnvironmentName: '${abbrs.appManagedEnvironments}${resourceToken}'
-    containerRegistryName: '${abbrs.containerRegistryRegistries}${resourceToken}'
+//    containerRegistryName: '${abbrs.containerRegistryRegistries}${resourceToken}'
     location: location
     logAnalyticsWorkspaceName: monitoring.outputs.logAnalyticsWorkspaceName
   }
@@ -123,7 +123,7 @@ module web 'web.bicep' = {
     name: '${abbrs.appContainerApps}web-${resourceToken}'
     location: location
     containerAppsEnvironmentName: containerApps.outputs.environmentName
-    containerRegistryName: containerApps.outputs.registryName
+    //containerRegistryName: '' //containerApps.outputs.registryName
     imageName: webImageName
     keyVaultName: keyVault.outputs.name
     apiBaseUrl: api.outputs.SERVICE_API_URI
@@ -145,7 +145,7 @@ module hub 'hub.bicep' = {
     name: '${abbrs.appContainerApps}hub-${resourceToken}'
     location: location
     containerAppsEnvironmentName: containerApps.outputs.environmentName
-    containerRegistryName: containerApps.outputs.registryName
+//    containerRegistryName: containerApps.outputs.registryName
     imageName: hubImageName
     keyVaultName: keyVault.outputs.name
     orleansStorageConnectionStringKey: storage.outputs.orleansStorageConnectionStringKey
@@ -171,7 +171,7 @@ module api 'api.bicep' = {
     name: '${abbrs.appContainerApps}api-${resourceToken}'
     location: location
     containerAppsEnvironmentName: containerApps.outputs.environmentName
-    containerRegistryName: containerApps.outputs.registryName
+    //containerRegistryName: containerApps.outputs.registryName
     imageName: apiImageName
     keyVaultName: keyVault.outputs.name
     feedQueueConnectionStringKey: storage.outputs.feedQueueConnectionStringKey
@@ -197,7 +197,7 @@ module updaterWorker 'updater.bicep' = {
     location: location
     keyVaultName: keyVault.outputs.name
     containerAppsEnvironmentName: containerApps.outputs.environmentName
-    containerRegistryName: containerApps.outputs.registryName
+    //containerRegistryName: containerApps.outputs.registryName
     imageName: updaterImageName
     dbConnectionStringKey: apiSqlServer.outputs.dbConnectionStringKey
     keyVaultEndpoint: keyVault.outputs.endpoint
@@ -219,7 +219,7 @@ module ingestionWorker 'ingestion.bicep' = if (feedIngestion) {
     name: '${abbrs.appContainerApps}ingestion-${resourceToken}'
     location: location
     containerAppsEnvironmentName: containerApps.outputs.environmentName
-    containerRegistryName: containerApps.outputs.registryName
+    //containerRegistryName: '' //containerApps.outputs.registryName
     imageName: ingestionImageName
     keyVaultName: keyVault.outputs.name
     feedQueueConnectionStringKey: storage.outputs.feedQueueConnectionStringKey
@@ -260,8 +260,8 @@ output AZURE_STORAGE_PRIMARY_KEY_STRING_KEY string = storage.outputs.storagePrim
 output APPLICATIONINSIGHTS_CONNECTION_STRING string = monitoring.outputs.applicationInsightsConnectionString
 output APPLICATIONINSIGHTS_NAME string = monitoring.outputs.applicationInsightsName
 output AZURE_CONTAINER_ENVIRONMENT_NAME string = containerApps.outputs.environmentName
-output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerApps.outputs.registryLoginServer
-output AZURE_CONTAINER_REGISTRY_NAME string = containerApps.outputs.registryName
+output AZURE_CONTAINER_REGISTRY_ENDPOINT string = '' //containerApps.outputs.registryLoginServer
+output AZURE_CONTAINER_REGISTRY_NAME string = ''//containerApps.outputs.registryName
 output AZURE_KEY_VAULT_ENDPOINT string = keyVault.outputs.endpoint
 output AZURE_KEY_VAULT_NAME string = keyVault.outputs.name
 output AZURE_LOCATION string = location

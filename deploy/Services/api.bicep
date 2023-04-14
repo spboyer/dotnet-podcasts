@@ -106,7 +106,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2021-09-01' existing = {
   scope: resourceGroup()
 }
 
-resource apiContainerApp 'Microsoft.App/containerApps@2022-03-01' = {
+resource apiContainerApp 'Microsoft.App/containerApps@2022-11-01-preview' = {
   name: apiName
   location: location
   properties: {
@@ -188,7 +188,7 @@ resource apiContainerApp 'Microsoft.App/containerApps@2022-03-01' = {
   ]
 }
 
-resource ingestionContainerApp 'Microsoft.App/containerApps@2022-03-01' = if (deployIngestion) {
+resource ingestionContainerApp 'Microsoft.App/containerApps@2022-11-01-preview' = if (deployIngestion) {
   name: 'podcastingestionca'
   location: location
   properties: {
