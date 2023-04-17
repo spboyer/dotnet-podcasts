@@ -18,19 +18,19 @@
       "value": "$(secretOrRandomPassword ${AZURE_KEY_VAULT_NAME} appUserPassword)"
     },
     "apiImageName": {
-      "value": "docker.io/spboyer/dotnet-podcast-podcastminapi"
+      "value": "shayne.azurecr.io/dotnet-podcast/podcastminapi"
     },
     "hubImageName": {
-      "value": "docker.io/spboyer/dotnet-podcast-listentogetherhub"
+      "value": "shayne.azurecr.io/dotnet-podcast/listentogetherhub"
     },
     "ingestionImageName": {
-      "value": "docker.io/spboyer/dotnet-podcast-podcastingestionworker"
+      "value": "shayne.azurecr.io/dotnet-podcast/podcastingestionworker"
     },
     "updaterImageName": {
-      "value": "docker.io/spboyer/dotnet-podcast-podcastupdaterworker"
+      "value": "shayne.azurecr.io/dotnet-podcast/podcastupdaterworker"
     },
     "webImageName": {
-      "value": "docker.io/spboyer/dotnet-podcast-podcastweb"
+      "value": "shayne.azurecr.io/dotnet-podcast/podcastweb"
     }
   }
 }
