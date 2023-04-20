@@ -11,6 +11,7 @@ param imageName string
 param keyVaultName string = ''
 param managedIdentity bool = !empty(keyVaultName)
 param targetPort int = 80
+param serviceBinds array = []
 
 @description('CPU cores allocated to a single container instance, e.g. 0.5')
 param containerCpuCoreCount string = '0.5'
@@ -35,6 +36,7 @@ resource app 'Microsoft.App/containerApps@2022-11-01-preview' = {
       }
     }
     template: {
+      serviceBinds: serviceBinds
       containers: [
         {
           image: imageName
@@ -63,3 +65,4 @@ output identityPrincipalId string = managedIdentity ? app.identity.principalId :
 output imageName string = imageName
 output name string = app.name
 output uri string = 'https://${app.properties.configuration.ingress.fqdn}'
+output appId string = app.id

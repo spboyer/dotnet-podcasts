@@ -14,6 +14,8 @@ param workspaceName string
 param apiName string
 param updaterName string
 
+param serviceBinds array = []
+
 var workspaceId = workspace.id
 var kubernetesEnvId = kubernetesEnv.id
 var sqlServerHostname = environment().suffixes.sqlServerHostname
@@ -143,6 +145,7 @@ resource apiContainerApp 'Microsoft.App/containerApps@2022-11-01-preview' = {
       ]
     }
     template: {
+      serviceBinds: serviceBinds
       containers: [
         {
           image: '${acr.properties.loginServer}/podcastapi:${imageTag}'

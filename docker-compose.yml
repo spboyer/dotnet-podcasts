@@ -21,8 +21,11 @@ services:
       - podcast.api
       - storage
 
+  #podcast.db:
+  #  image: mcr.microsoft.com/mssql/server:2019-latest 
+
   podcast.db:
-    image: mcr.microsoft.com/mssql/server:2019-latest 
+    image: postgres:latest
 
   listentogether.hub:
     image: ${DOCKER_REGISTRY-}listentogetherhub

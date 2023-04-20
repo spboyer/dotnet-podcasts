@@ -86,6 +86,21 @@ module apiSqlServer 'app/db.bicep' = {
   ]
 }
 
+module apiPostgreSql './core/host/springboard-container-app.bicep' = {
+  name: 'podcast2.sql'
+  scope: rg
+  params: {
+    name: '${abbrs.dBforPostgreSQLServers}podcast-${resourceToken}'
+    location: location
+    //keyVaultName: keyVault.outputs.name
+    tags: tags
+    containerAppsEnvironmentName: containerApps.outputs.environmentName
+    serviceType: 'postgres'
+  }
+  dependsOn: [
+    containerApps
+  ]
+}
 module hubSqlServer 'app/db.bicep' = {
   name: 'listentogether.sql'
   scope: rg
@@ -186,6 +201,7 @@ module api 'api.bicep' = {
     containerApps
     apiSqlServer
     storage
+    apiPostgreSql
   ]
 }
 

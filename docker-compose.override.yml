@@ -4,21 +4,35 @@ services:
 
   podcast.api:
     environment:
-        - ConnectionStrings__PodcastDb=Server=podcast.db;Database=Podcast;User Id=sa;Password=Pass@word;Encrypt=False
+        #- ConnectionStrings__PodcastDb=Server=podcast.db;Database=Podcast;User Id=sa;Password=Pass@word;Encrypt=False
+        - ConnectionStrings__PodcastDb=Host=podcast.db;Database=Podcast;Username=sa;Password=Pass@word
         - ASPNETCORE_ENVIRONMENT=Development
         - ASPNETCORE_URLS=http://+:80
         - ConnectionStrings__FeedQueue=UseDevelopmentStorage=true;DevelopmentStorageProxyUri=http://azurite
+        - AZURE_KEY_VAULT_ENDPOINT=https://podcastvault.vault.azure.net/
+        - AZURE_API_SQL_CONNECTION_STRING_KEY=''
     ports:
         - "5003:80"
 
+#  podcast.db:
+#    environment:
+#      - SA_PASSWORD=Pass@word
+#     - ACCEPT_EULA=Y
+#   ports:
+#     - "5433:1433"
+#   volumes:
+#     - podcast-sqldata:/var/opt/mssql
+
   podcast.db:
     environment:
-      - SA_PASSWORD=Pass@word
-      - ACCEPT_EULA=Y
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: Pass@word
+      POSTGRES_DB: Podcasts
+      PGDATA: /var/lib/postgresql/data/mydata/
+    #volumes:
+    #  - 'podcast-sqldata:/var/lib/postgresql/data/mydata/'
     ports:
-      - "5433:1433"
-    volumes:
-      - podcast-sqldata:/var/opt/mssql
+      - "5432:5432"
 
   podcast.updater.worker:
     environment:
@@ -57,4 +71,4 @@ services:
 
 volumes:
   podcast-sqldata:
-    external: false
+   # external: false

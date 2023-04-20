@@ -26,5 +26,6 @@ module containerAppsEnvironment 'container-apps-environment.bicep' = {
 //}
 
 output environmentName string = containerAppsEnvironment.outputs.name
+output id string = containerAppsEnvironment.outputs.id
 //output registryLoginServer string = containerRegistry.outputs.loginServer
 //output registryName string = containerRegistry.outputs.name

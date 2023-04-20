@@ -23,7 +23,8 @@ var builder = WebApplication.CreateBuilder(args);
 var credential = new ChainedTokenCredential(new AzureDeveloperCliCredential(), new DefaultAzureCredential());
 builder.Configuration.AddAzureKeyVault(new Uri(builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"]), credential);
 var dbConnectionString = builder.Configuration[builder.Configuration["AZURE_API_SQL_CONNECTION_STRING_KEY"]] ?? throw new InvalidOperationException("Missing connection string configuration");
-builder.Services.AddSqlServer<PodcastDbContext>(dbConnectionString);
+//builder.Services.AddSqlServer<PodcastDbContext>(dbConnectionString);
+builder.Services.AddNpgsql<PodcastDbContext>(dbConnectionString);
 
 var queueConnectionString = builder.Configuration[builder.Configuration["AZURE_FEED_QUEUE_CONNECTION_STRING_KEY"]] ?? throw new InvalidOperationException("Missing feed queue configuration");
 builder.Services.AddSingleton(new QueueClient(queueConnectionString, "feed-queue"));
