@@ -1,5 +1,5 @@
 using Azure.Identity;
-using Microsoft.Extensions.Configuration;
+using Podcast.Infrastructure;
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration(configuration => {
@@ -8,16 +8,12 @@ var host = Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((hostContext, services) =>
     {
-        services.AddDbContext<PodcastDbContext>(options =>
+        services.AddSql<PodcastDbContext>(hostContext.Configuration, new SqlConfig
         {
-            options.UseSqlServer(
-                hostContext.Configuration[hostContext.Configuration["AZURE_API_SQL_CONNECTION_STRING_KEY"]],
-                builder =>
-                {
-                    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-                    builder.CommandTimeout(10);
-                }
-            );
+            RetryOnFailure = true,
+            RetryCount = 5,
+            RetryDelay = TimeSpan.FromSeconds(10),
+            CommandTimeout = 10,
         });
         var feedQueueClient = new QueueClient(hostContext.Configuration[hostContext.Configuration["AZURE_FEED_QUEUE_CONNECTION_STRING_KEY"]], "feed-queue");
         feedQueueClient.CreateIfNotExists();

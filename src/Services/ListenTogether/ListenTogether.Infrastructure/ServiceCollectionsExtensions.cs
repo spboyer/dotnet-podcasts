@@ -1,7 +1,7 @@
-﻿using Azure.Identity;
-using ListenTogether.Application.Interfaces;
+﻿using ListenTogether.Application.Interfaces;
 using ListenTogether.Infrastructure.Data;
 using ListenTogether.Infrastructure.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,8 +11,7 @@ namespace ListenTogether.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection serviceCollection, IConfiguration configuration)
         {
-            var connectionString = configuration[configuration["AZURE_HUB_SQL_CONNECTION_STRING_KEY"]];
-            serviceCollection.AddSqlServer<ListenTogetherDbContext>(connectionString);
+            serviceCollection.AddSql<ListenTogetherDbContext>(configuration);
             serviceCollection.AddScoped<IApplicationDbContext, ListenTogetherDbContext>();
             serviceCollection.AddHttpClient<IEpisodesClient, EpisodesHttpClient>(opt =>
             {
@@ -20,6 +19,34 @@ namespace ListenTogether.Infrastructure
                 opt.DefaultRequestHeaders.Add("api-version", "1.0");
             });
 
+            return serviceCollection;
+        }
+
+        private static IServiceCollection AddSql<T>(this IServiceCollection serviceCollection, IConfiguration configuration) where T : DbContext
+        {
+            var dataStore = configuration["DATA_STORE"] ?? "SQLServer";
+            
+            switch (dataStore)
+            {
+                case "SQLServer":
+                {
+                    var connectionString = configuration["AZURE_HUB_SQL_CONNECTION_STRING_KEY"];
+                    serviceCollection.AddSqlServer<T>(connectionString);
+                    break;
+                }
+                case "PostgreSQL":
+                {
+                    var pgHost = configuration["POSTGRES_HOST"];
+                    var pgPassword = configuration["POSTGRES_PASSWORD"];
+                    var pgUser = configuration["POSTGRES_USERNAME"];
+                    var pgDatabase = configuration["POSTGRES_DATABASE"];
+                    var pgConnection = $"Host={pgHost};Database={pgDatabase};Username={pgUser};Password={pgPassword};Timeout=300";
+                    serviceCollection.AddNpgsql<T>(pgConnection, options => options.EnableRetryOnFailure());
+                    break;
+                }
+                default:
+                    throw new ArgumentException($"Invalid data store: {dataStore}");
+            }
             return serviceCollection;
         }
     }

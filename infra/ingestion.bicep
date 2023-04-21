@@ -3,13 +3,13 @@ param name string
 param location string = resourceGroup().location
 param tags object = {}
 param containerAppsEnvironmentName string
-// param containerRegistryName string
 param imageName string = ''
 param keyVaultName string
 param feedQueueConnectionStringKey string
-param dbConnectionStringKey string
 param keyVaultEndpoint string
 param applicationInsightsConnectionString string
+param dataStore string
+param serviceBinds array = []
 
 var serviceName = 'ingestion'
 
@@ -25,12 +25,12 @@ module app 'core/host/container-app.bicep' = {
     containerMemory: '2.0Gi'
     env: [
       {
-        name: 'AZURE_FEED_QUEUE_CONNECTION_STRING_KEY'
-        value: feedQueueConnectionStringKey
+        name: 'DATA_STORE'
+        value: dataStore
       }
       {
-        name: 'AZURE_API_SQL_CONNECTION_STRING_KEY'
-        value: dbConnectionStringKey
+        name: 'AZURE_FEED_QUEUE_CONNECTION_STRING_KEY'
+        value: feedQueueConnectionStringKey
       }
       {
         name: 'AZURE_KEY_VAULT_ENDPOINT'
@@ -47,6 +47,7 @@ module app 'core/host/container-app.bicep' = {
     ]
     imageName: !empty(imageName) ? imageName : 'nginx:latest'
     keyVaultName: keyVault.name
+    serviceBinds: serviceBinds
   }
 }
 

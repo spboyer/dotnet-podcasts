@@ -6,7 +6,6 @@ param name string
 param location string = resourceGroup().location
 param tags object = {}
 param containerAppsEnvironmentName string
-// param containerRegistryName string
 param imageName string
 param apiBaseUrl string
 param listenTogetherHubUrl string
