@@ -22,6 +22,7 @@ module app 'core/host/container-app.bicep' = {
     containerAppsEnvironmentName: containerAppsEnvironmentName
     containerCpuCoreCount: '1.0'
     containerMemory: '2.0Gi'
+    enableIngres: false
     env: [
       {
         name: 'DATA_STORE'

@@ -5,12 +5,15 @@ param tags object = {}
 param containerAppsEnvironmentName string = ''
 param containerName string = 'main'
 param env array = []
+param enableIngres bool = true
 param external bool = true
 param imageName string
 param keyVaultName string = ''
 param managedIdentity bool = !empty(keyVaultName)
 param targetPort int = 80
 param serviceBinds array = []
+param minReplicas int = 1
+param maxReplicas int = 1
 
 @description('CPU cores allocated to a single container instance, e.g. 0.5')
 param containerCpuCoreCount string = '0.5'
@@ -28,11 +31,11 @@ resource app 'Microsoft.App/containerApps@2022-11-01-preview' = {
     managedEnvironmentId: containerAppsEnvironment.id
     configuration: {
       activeRevisionsMode: 'single'
-      ingress: {
+      ingress: enableIngres ? {
         external: external
         targetPort: targetPort
         transport: 'auto'
-      }
+      } : null
     }
     template: {
       serviceBinds: serviceBinds
@@ -47,6 +50,10 @@ resource app 'Microsoft.App/containerApps@2022-11-01-preview' = {
           }
         }
       ]
+      scale: {
+        minReplicas: minReplicas
+        maxReplicas: maxReplicas
+      }
     }
   }
 }
