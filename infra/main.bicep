@@ -19,6 +19,7 @@ param hubImageName string = ''
 param ingestionImageName string = ''
 param updaterImageName string = ''
 param webImageName string = ''
+param dataStore string = 'PostgreSQL'
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
@@ -71,7 +72,7 @@ module hubPostgreSql './core/host/springboard-container-app.bicep' = {
   name: 'listentogether.sql'
   scope: rg
   params: {
-    name: '${abbrs.dBforPostgreSQLServers}podcast-${resourceToken}'
+    name: '${abbrs.dBforPostgreSQLServers}hub-${resourceToken}'
     location: location
     tags: tags
     containerAppsEnvironmentName: containerApps.outputs.environmentName
@@ -119,6 +120,7 @@ module hub 'hub.bicep' = {
     apiBaseUrl: api.outputs.SERVICE_API_URI
     keyVaultEndpoint: keyVault.outputs.endpoint
     applicationInsightsConnectionString: monitoring.outputs.applicationInsightsConnectionString
+    dataStore: dataStore
     serviceBinds: [
       hubPostgreSql.outputs.serviceBind
     ]
@@ -139,6 +141,7 @@ module api 'api.bicep' = {
     keyVaultEndpoint: keyVault.outputs.endpoint
     applicationInsightsConnectionString: monitoring.outputs.applicationInsightsConnectionString
     feedIngestion: '${feedIngestion}'
+    dataStore: dataStore
     serviceBinds: [
       apiPostgreSql.outputs.serviceBind
     ]
@@ -157,6 +160,7 @@ module updaterWorker 'updater.bicep' = {
     imageName: updaterImageName
     keyVaultEndpoint: keyVault.outputs.endpoint
     applicationInsightsConnectionString: monitoring.outputs.applicationInsightsConnectionString
+    dataStore: dataStore
     serviceBinds: [
       apiPostgreSql.outputs.serviceBind
     ]
@@ -177,6 +181,7 @@ module ingestionWorker 'ingestion.bicep' = if (feedIngestion) {
     keyVaultEndpoint: keyVault.outputs.endpoint
     applicationInsightsConnectionString: monitoring.outputs.applicationInsightsConnectionString
     tags: tags
+    dataStore: dataStore
     serviceBinds: [
       apiPostgreSql.outputs.serviceBind
     ]

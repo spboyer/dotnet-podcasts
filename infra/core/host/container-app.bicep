@@ -4,7 +4,6 @@ param tags object = {}
 
 param containerAppsEnvironmentName string = ''
 param containerName string = 'main'
-//param containerRegistryName string = 'shayne.azurecr.io'
 param env array = []
 param external bool = true
 param imageName string
@@ -55,11 +54,6 @@ resource app 'Microsoft.App/containerApps@2022-11-01-preview' = {
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01' existing = {
   name: containerAppsEnvironmentName
 }
-
-// 2022-02-01-preview needed for anonymousPullEnabled
-//resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' existing = {
-//  name: containerRegistryName
-//}
 
 output identityPrincipalId string = managedIdentity ? app.identity.principalId : ''
 output imageName string = imageName
