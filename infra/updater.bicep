@@ -60,5 +60,4 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
 
 output SERVICE_UPDATER_IDENTITY_PRINCIPAL_ID string = app.outputs.identityPrincipalId
 output SERVICE_UPDATER_NAME string = app.outputs.name
-output SERVICE_UPDATER_URI string = app.outputs.uri
 output SERVICE_UPDATER_IMAGE_NAME string = app.outputs.imageName

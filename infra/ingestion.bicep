@@ -65,5 +65,4 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
 
 output SERVICE_INGESTION_IDENTITY_PRINCIPAL_ID string = app.outputs.identityPrincipalId
 output SERVICE_INGESTION_NAME string = app.outputs.name
-output SERVICE_INGESTION_URI string = app.outputs.uri
 output SERVICE_INGESTION_IMAGE_NAME string = app.outputs.imageName

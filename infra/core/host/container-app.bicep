@@ -65,5 +65,5 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
 output identityPrincipalId string = managedIdentity ? app.identity.principalId : ''
 output imageName string = imageName
 output name string = app.name
-output uri string = 'https://${app.properties.configuration.ingress.fqdn}'
+output uri string = enableIngres ? 'https://${app.properties.configuration.ingress.fqdn}' : ''
 output appId string = app.id
