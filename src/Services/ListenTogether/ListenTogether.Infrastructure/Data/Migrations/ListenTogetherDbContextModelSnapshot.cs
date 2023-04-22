@@ -27,7 +27,7 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(idTypeName);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -37,13 +37,13 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                         .HasColumnType("time");
 
                     b.Property<Guid>("EpisodeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(idTypeName);
 
                     b.Property<DateTime>("Published")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("ShowId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(idTypeName);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -66,7 +66,7 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid>("EpisodeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(idTypeName);
 
                     b.Property<int>("PlayerState")
                         .HasColumnType("int");
@@ -88,7 +88,7 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(idTypeName);
 
                     b.Property<string>("Author")
                         .IsRequired()
@@ -99,7 +99,7 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ShowId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(idTypeName);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -114,7 +114,7 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(idTypeName);
 
                     b.Property<string>("ConnectionId")
                         .IsRequired()

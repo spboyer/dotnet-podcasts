@@ -13,7 +13,7 @@ namespace Podcast.Infrastructure.Data.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: idTypeName, nullable: false),
                     Genre = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -25,9 +25,9 @@ namespace Podcast.Infrastructure.Data.Migrations
                 name: "Feeds",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: idTypeName, nullable: false),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsFeatured = table.Column<bool>(type: "bit", nullable: false)
+                    IsFeatured = table.Column<bool>(type: boolTypeName, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,8 +38,8 @@ namespace Podcast.Infrastructure.Data.Migrations
                 name: "FeedCategory",
                 columns: table => new
                 {
-                    FeedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    FeedId = table.Column<Guid>(type: idTypeName, nullable: false),
+                    CategoryId = table.Column<Guid>(type: idTypeName, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,7 +62,7 @@ namespace Podcast.Infrastructure.Data.Migrations
                 name: "Shows",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: idTypeName, nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -71,7 +71,7 @@ namespace Podcast.Infrastructure.Data.Migrations
                     Link = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Language = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FeedId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    FeedId = table.Column<Guid>(type: idTypeName, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,14 +88,14 @@ namespace Podcast.Infrastructure.Data.Migrations
                 name: "Episodes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<Guid>(type: idTypeName, nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Explicit = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Published = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: true),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShowId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ShowId = table.Column<Guid>(type: idTypeName, nullable: false)
                 },
                 constraints: table =>
                 {
