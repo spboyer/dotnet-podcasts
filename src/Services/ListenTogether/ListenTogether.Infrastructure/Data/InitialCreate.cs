@@ -15,7 +15,7 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 //"SQLServer":
                 //"PostgreSQL":
 
-        public static string idTypeName 
+        public static string IdTypeName 
         { 
             get 
             {   
@@ -51,9 +51,9 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
     public partial class InitialCreate
     {
        
-        public string idTypeName 
+        public string IdTypeName 
         { 
-            get { return DataHelper.idTypeName; } 
+            get { return DataHelper.IdTypeName; } 
         }
 
         public string boolTypeName 
@@ -66,9 +66,9 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
    public partial class ListenTogetherDbContextModelSnapshot
    {
 
-        public string idTypeName 
+        public string IdTypeName 
         { 
-            get { return DataHelper.idTypeName; } 
+            get { return DataHelper.IdTypeName; } 
         }
 
         public string boolTypeName 

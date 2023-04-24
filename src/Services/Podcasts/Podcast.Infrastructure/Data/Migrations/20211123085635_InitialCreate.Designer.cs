@@ -28,7 +28,7 @@ namespace Podcast.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType(idTypeName);
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Genre")
                         .IsRequired()
@@ -75,7 +75,7 @@ namespace Podcast.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType(idTypeName);
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -92,7 +92,7 @@ namespace Podcast.Infrastructure.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("ShowId")
-                        .HasColumnType(idTypeName);
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -113,7 +113,7 @@ namespace Podcast.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType(idTypeName);
+                        .HasColumnType(IdTypeName);
 
                     b.Property<bool>("IsFeatured")
                         .HasColumnType(boolTypeName);
@@ -264,10 +264,10 @@ namespace Podcast.Infrastructure.Data.Migrations
             modelBuilder.Entity("Podcast.Infrastructure.Data.Models.FeedCategory", b =>
                 {
                     b.Property<Guid>("FeedId")
-                        .HasColumnType(idTypeName);
+                        .HasColumnType(IdTypeName);
 
                     b.Property<Guid>("CategoryId")
-                        .HasColumnType(idTypeName);
+                        .HasColumnType(IdTypeName);
 
                     b.HasKey("FeedId", "CategoryId");
 
@@ -472,7 +472,7 @@ namespace Podcast.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType(idTypeName);
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Author")
                         .IsRequired()
@@ -487,7 +487,7 @@ namespace Podcast.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("FeedId")
-                        .HasColumnType(idTypeName);
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Image")
                         .IsRequired()

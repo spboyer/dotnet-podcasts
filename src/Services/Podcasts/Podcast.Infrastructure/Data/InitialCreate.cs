@@ -15,7 +15,7 @@ namespace Podcast.Infrastructure.Data.Migrations
                 //"SQLServer":
                 //"PostgreSQL":
 
-        public static string idTypeName 
+        public static string IdTypeName 
         { 
             get 
             {   
@@ -51,9 +51,9 @@ namespace Podcast.Infrastructure.Data.Migrations
        public partial class InitialCreate
     {
        
-        public string idTypeName 
+        public string IdTypeName 
         { 
-            get { return DataHelper.idTypeName; } 
+            get { return DataHelper.IdTypeName; } 
         }
 
         public string boolTypeName 
@@ -65,9 +65,9 @@ namespace Podcast.Infrastructure.Data.Migrations
 
    public partial class PodcastDbContextModelSnapshot
    {
-        public string idTypeName 
+        public string IdTypeName 
         { 
-            get { return DataHelper.idTypeName; } 
+            get { return DataHelper.IdTypeName; } 
         }
 
         public string boolTypeName 

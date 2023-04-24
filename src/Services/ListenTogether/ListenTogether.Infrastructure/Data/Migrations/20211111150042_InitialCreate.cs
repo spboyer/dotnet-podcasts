@@ -12,8 +12,8 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 name: "Shows",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: idTypeName, nullable: false),
-                    ShowId = table.Column<Guid>(type: idTypeName, nullable: false),
+                    Id = table.Column<Guid>(type: IdTypeName, nullable: false),
+                    ShowId = table.Column<Guid>(type: IdTypeName, nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -27,14 +27,14 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 name: "Episodes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: idTypeName, nullable: false),
-                    EpisodeId = table.Column<Guid>(type: idTypeName, nullable: false),
+                    Id = table.Column<Guid>(type: IdTypeName, nullable: false),
+                    EpisodeId = table.Column<Guid>(type: IdTypeName, nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Published = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: true),
-                    ShowId = table.Column<Guid>(type: idTypeName, nullable: false)
+                    ShowId = table.Column<Guid>(type: IdTypeName, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,7 +55,7 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                     PlayerState = table.Column<int>(type: "int", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProgressAt = table.Column<TimeSpan>(type: "time", nullable: false),
-                    EpisodeId = table.Column<Guid>(type: idTypeName, nullable: false)
+                    EpisodeId = table.Column<Guid>(type: IdTypeName, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,7 +72,7 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: idTypeName, nullable: false),
+                    Id = table.Column<Guid>(type: IdTypeName, nullable: false),
                     ConnectionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RoomCode = table.Column<string>(type: "nvarchar(450)", nullable: true)
