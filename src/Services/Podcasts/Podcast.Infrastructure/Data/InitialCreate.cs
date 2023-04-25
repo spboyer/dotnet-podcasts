@@ -12,8 +12,6 @@ namespace Podcast.Infrastructure.Data.Migrations
         static IConfigurationRoot configuration = builder.Build();
 
         private static string dataStore = configuration["DATA_STORE"] ?? "SQLServer";
-                //"SQLServer":
-                //"PostgreSQL":
 
         public static string IdTypeName 
         { 
@@ -31,7 +29,7 @@ namespace Podcast.Infrastructure.Data.Migrations
             } 
         }
 
-        public static string boolTypeName 
+        public static string BoolTypeName 
         { 
             get 
             {   
@@ -46,9 +44,41 @@ namespace Podcast.Infrastructure.Data.Migrations
                 }
             } 
         }
+
+        public static string StringTypeName
+        { 
+            get 
+            {   
+                switch (dataStore)
+                {
+                    case "SQLServer":
+                        return "nvarchar(max)";
+                    case "PostgreSQL":
+                        return "text";
+                    default:
+                        throw new ArgumentException($"Invalid data store: {dataStore}");
+                }
+            } 
+        }
+
+        public static string DateTimeTypeName
+        { 
+            get 
+            {   
+                switch (dataStore)
+                {
+                    case "SQLServer":
+                        return "datetime2";
+                    case "PostgreSQL":
+                        return "timestamp";
+                    default:
+                        throw new ArgumentException($"Invalid data store: {dataStore}");
+                }
+            } 
+        }
     }
 
-       public partial class InitialCreate
+    public partial class InitialCreate
     {
        
         public string IdTypeName 
@@ -56,23 +86,65 @@ namespace Podcast.Infrastructure.Data.Migrations
             get { return DataHelper.IdTypeName; } 
         }
 
-        public string boolTypeName 
+        public string BoolTypeName 
         { 
-            get { return DataHelper.boolTypeName;}
+            get { return DataHelper.BoolTypeName;}
         }
         
+        public string StringTypeName
+        {
+            get { return DataHelper.StringTypeName; }
+        }
+
+        public string DateTimeTypeName
+        {
+            get { return DataHelper.DateTimeTypeName; }
+        }
    }
 
    public partial class PodcastDbContextModelSnapshot
+   {
+        public string IdTypeName
+        { 
+            get { return DataHelper.IdTypeName; }
+        }
+
+        public string BoolTypeName 
+        { 
+            get { return DataHelper.BoolTypeName;}
+        }
+
+        public string StringTypeName
+        {
+            get { return DataHelper.StringTypeName; }
+        }
+
+        public string DateTimeTypeName
+        {
+            get { return DataHelper.DateTimeTypeName; }
+        }
+   }
+
+   public partial class feedapproval
    {
         public string IdTypeName 
         { 
             get { return DataHelper.IdTypeName; } 
         }
 
-        public string boolTypeName 
+        public string BoolTypeName 
         { 
-            get { return DataHelper.boolTypeName;}
+            get { return DataHelper.BoolTypeName;}
+        }
+
+        public string StringTypeName
+        {
+            get { return DataHelper.StringTypeName; }
+        }
+
+        public string DateTimeTypeName
+        {
+            get { return DataHelper.DateTimeTypeName; }
         }
    }
    

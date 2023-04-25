@@ -14,9 +14,9 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: IdTypeName, nullable: false),
                     ShowId = table.Column<Guid>(type: IdTypeName, nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Title = table.Column<string>(type: StringTypeName, nullable: false),
+                    Author = table.Column<string>(type: StringTypeName, nullable: false),
+                    Image = table.Column<string>(type: StringTypeName, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,10 +29,10 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: IdTypeName, nullable: false),
                     EpisodeId = table.Column<Guid>(type: IdTypeName, nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Published = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Title = table.Column<string>(type: StringTypeName, nullable: false),
+                    Description = table.Column<string>(type: StringTypeName, nullable: false),
+                    Url = table.Column<string>(type: StringTypeName, nullable: false),
+                    Published = table.Column<DateTime>(type: DateTimeTypeName, nullable: false),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: true),
                     ShowId = table.Column<Guid>(type: IdTypeName, nullable: false)
                 },
@@ -51,9 +51,9 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 name: "Rooms",
                 columns: table => new
                 {
-                    Code = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Code = table.Column<string>(type: StringTypeName, nullable: false),
                     PlayerState = table.Column<int>(type: "int", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: DateTimeTypeName, nullable: false),
                     ProgressAt = table.Column<TimeSpan>(type: "time", nullable: false),
                     EpisodeId = table.Column<Guid>(type: IdTypeName, nullable: false)
                 },
@@ -73,9 +73,9 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: IdTypeName, nullable: false),
-                    ConnectionId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RoomCode = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ConnectionId = table.Column<string>(type: StringTypeName, nullable: false),
+                    Name = table.Column<string>(type: StringTypeName, nullable: false),
+                    RoomCode = table.Column<string>(type: StringTypeName, nullable: true)
                 },
                 constraints: table =>
                 {
