@@ -3,6 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Azure Dev CLI folder/files
+.azure/
+.azure/config.json
+
 # User-specific files
 *.rsuser
 *.suo

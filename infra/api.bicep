@@ -1,16 +1,15 @@
-
 param name string
 param location string = resourceGroup().location
 param tags object = {}
 param imageName string = ''
 param containerAppsEnvironmentName string
-//param containerRegistryName string
-param dbConnectionStringKey string
 param feedQueueConnectionStringKey string
 param feedIngestion string
 param keyVaultEndpoint string
 param applicationInsightsConnectionString string
 param keyVaultName string
+param dataStore string
+param serviceBinds array = []
 
 var serviceName = 'api'
 
@@ -21,13 +20,13 @@ module app 'core/host/container-app.bicep' = {
     location: location
     tags: union(tags, { 'azd-service-name': serviceName })
     containerAppsEnvironmentName: containerAppsEnvironmentName
-//    containerRegistryName: containerRegistryName
     containerCpuCoreCount: '1.0'
     containerMemory: '2.0Gi'
+    serviceBinds: serviceBinds
     env: [
       {
-        name: 'AZURE_API_SQL_CONNECTION_STRING_KEY'
-        value: dbConnectionStringKey
+        name: 'DATA_STORE'
+        value: dataStore
       }
       {
         name: 'AZURE_FEED_QUEUE_CONNECTION_STRING_KEY'

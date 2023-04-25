@@ -14,27 +14,16 @@ param principalId string = ''
 
 param feedIngestion bool = true
 
-@secure()
-@description('SQL Server administrator password')
-param sqlAdminPassword string
-
-@secure()
-@description('Application user password')
-param appUserPassword string
-
 param apiImageName string = ''
 param hubImageName string = ''
 param ingestionImageName string = ''
 param updaterImageName string = ''
 param webImageName string = ''
+param dataStore string = 'PostgreSQL'
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 var tags = { 'azd-env-name': environmentName }
-var hubDataBaseName = 'ListenTogether'
-var apiDataBaseName = 'Podcast'
-var apiSqlConnectionStringKey = 'AZURE-API-SQL-CONNECTION-STRING'
-var hubSqlConnectionStringKey = 'AZURE-HUB-SQL-CONNECTION-STRING'
 
 // Organize resources in a resource group
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
@@ -50,7 +39,6 @@ module containerApps './core/host/container-apps.bicep' = {
   params: {
     name: 'app'
     containerAppsEnvironmentName: '${abbrs.appManagedEnvironments}${resourceToken}'
-//    containerRegistryName: '${abbrs.containerRegistryRegistries}${resourceToken}'
     location: location
     logAnalyticsWorkspaceName: monitoring.outputs.logAnalyticsWorkspaceName
   }
@@ -68,55 +56,28 @@ module keyVault 'core/security/keyvault.bicep' = {
   }
 }
 
-module apiSqlServer 'app/db.bicep' = {
-  name: 'podcast.sql'
-  scope: rg
-  params: {
-    name: '${abbrs.sqlServers}podcast-${resourceToken}'
-    location: location
-    databaseName: apiDataBaseName
-    connectionStringKey: apiSqlConnectionStringKey
-    keyValutName: keyVault.outputs.name
-    sqlAdminPassword: sqlAdminPassword
-    appUserPassword: appUserPassword
-    tags: tags
-  }
-  dependsOn: [
-    keyVault
-  ]
-}
-
 module apiPostgreSql './core/host/springboard-container-app.bicep' = {
-  name: 'podcast2.sql'
+  name: 'podcast.sql'
   scope: rg
   params: {
     name: '${abbrs.dBforPostgreSQLServers}podcast-${resourceToken}'
     location: location
-    //keyVaultName: keyVault.outputs.name
     tags: tags
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     serviceType: 'postgres'
   }
-  dependsOn: [
-    containerApps
-  ]
 }
-module hubSqlServer 'app/db.bicep' = {
+
+module hubPostgreSql './core/host/springboard-container-app.bicep' = {
   name: 'listentogether.sql'
   scope: rg
   params: {
-    name: '${abbrs.sqlServers}listentogether-${resourceToken}'
+    name: '${abbrs.dBforPostgreSQLServers}hub-${resourceToken}'
     location: location
-    databaseName: hubDataBaseName
-    connectionStringKey: hubSqlConnectionStringKey
-    keyValutName: keyVault.outputs.name
-    sqlAdminPassword: sqlAdminPassword
-    appUserPassword: appUserPassword
     tags: tags
+    containerAppsEnvironmentName: containerApps.outputs.environmentName
+    serviceType: 'postgres'
   }
-  dependsOn: [
-    keyVault
-  ]
 }
 
 module storage 'app/storage.bicep' = {
@@ -138,19 +99,12 @@ module web 'web.bicep' = {
     name: '${abbrs.appContainerApps}web-${resourceToken}'
     location: location
     containerAppsEnvironmentName: containerApps.outputs.environmentName
-    //containerRegistryName: '' //containerApps.outputs.registryName
     imageName: webImageName
     keyVaultName: keyVault.outputs.name
     apiBaseUrl: api.outputs.SERVICE_API_URI
     listenTogetherHubUrl: hub.outputs.LISTEN_TOGETHER_HUB
     tags: tags
   }
-  dependsOn:[
-    monitoring
-    containerApps
-    api
-    hub
-  ]
 }
 
 module hub 'hub.bicep' = {
@@ -160,23 +114,18 @@ module hub 'hub.bicep' = {
     name: '${abbrs.appContainerApps}hub-${resourceToken}'
     location: location
     containerAppsEnvironmentName: containerApps.outputs.environmentName
-//    containerRegistryName: containerApps.outputs.registryName
     imageName: hubImageName
     keyVaultName: keyVault.outputs.name
     orleansStorageConnectionStringKey: storage.outputs.orleansStorageConnectionStringKey
-    dbConnectionStringKey: hubSqlServer.outputs.dbConnectionStringKey
     apiBaseUrl: api.outputs.SERVICE_API_URI
     keyVaultEndpoint: keyVault.outputs.endpoint
     applicationInsightsConnectionString: monitoring.outputs.applicationInsightsConnectionString
+    dataStore: dataStore
+    serviceBinds: [
+      hubPostgreSql.outputs.serviceBind
+    ]
     tags: tags
   }
-  dependsOn: [
-    monitoring
-    containerApps
-    hubSqlServer
-    storage
-    api
-  ]
 }
 
 module api 'api.bicep' = {
@@ -186,23 +135,18 @@ module api 'api.bicep' = {
     name: '${abbrs.appContainerApps}api-${resourceToken}'
     location: location
     containerAppsEnvironmentName: containerApps.outputs.environmentName
-    //containerRegistryName: containerApps.outputs.registryName
     imageName: apiImageName
     keyVaultName: keyVault.outputs.name
     feedQueueConnectionStringKey: storage.outputs.feedQueueConnectionStringKey
-    dbConnectionStringKey: apiSqlServer.outputs.dbConnectionStringKey
     keyVaultEndpoint: keyVault.outputs.endpoint
     applicationInsightsConnectionString: monitoring.outputs.applicationInsightsConnectionString
     feedIngestion: '${feedIngestion}'
+    dataStore: dataStore
+    serviceBinds: [
+      apiPostgreSql.outputs.serviceBind
+    ]
     tags: tags
   }
-  dependsOn: [
-    monitoring
-    containerApps
-    apiSqlServer
-    storage
-    apiPostgreSql
-  ]
 }
 
 module updaterWorker 'updater.bicep' = {
@@ -213,19 +157,15 @@ module updaterWorker 'updater.bicep' = {
     location: location
     keyVaultName: keyVault.outputs.name
     containerAppsEnvironmentName: containerApps.outputs.environmentName
-    //containerRegistryName: containerApps.outputs.registryName
     imageName: updaterImageName
-    dbConnectionStringKey: apiSqlServer.outputs.dbConnectionStringKey
     keyVaultEndpoint: keyVault.outputs.endpoint
     applicationInsightsConnectionString: monitoring.outputs.applicationInsightsConnectionString
+    dataStore: dataStore
+    serviceBinds: [
+      apiPostgreSql.outputs.serviceBind
+    ]
     tags: tags
   }
-  dependsOn: [
-    monitoring
-    containerApps
-    apiSqlServer
-    storage
-  ]
 }
 
 module ingestionWorker 'ingestion.bicep' = if (feedIngestion) {
@@ -235,21 +175,17 @@ module ingestionWorker 'ingestion.bicep' = if (feedIngestion) {
     name: '${abbrs.appContainerApps}ingestion-${resourceToken}'
     location: location
     containerAppsEnvironmentName: containerApps.outputs.environmentName
-    //containerRegistryName: '' //containerApps.outputs.registryName
     imageName: ingestionImageName
     keyVaultName: keyVault.outputs.name
     feedQueueConnectionStringKey: storage.outputs.feedQueueConnectionStringKey
-    dbConnectionStringKey: apiSqlServer.outputs.dbConnectionStringKey
     keyVaultEndpoint: keyVault.outputs.endpoint
     applicationInsightsConnectionString: monitoring.outputs.applicationInsightsConnectionString
     tags: tags
+    dataStore: dataStore
+    serviceBinds: [
+      apiPostgreSql.outputs.serviceBind
+    ]
   }
-  dependsOn: [
-    monitoring
-    containerApps
-    apiSqlServer
-    storage
-  ]
 }
 
 // Monitor application with Azure Monitor
@@ -266,9 +202,7 @@ module monitoring 'core/monitor/monitoring.bicep' = {
 }
 
 // Data outputs
-output AZURE_API_SQL_CONNECTION_STRING_KEY string = apiSqlServer.outputs.dbConnectionStringKey
 output AZURE_FEED_QUEUE_CONNECTION_STRING_KEY string = storage.outputs.feedQueueConnectionStringKey
-output AZURE_HUB_SQL_CONNECTION_STRING_KEY string = hubSqlServer.outputs.dbConnectionStringKey
 output AZURE_ORLEANS_STORAGE_CONNECTION_STRING_KEY string = storage.outputs.orleansStorageConnectionStringKey
 output AZURE_STORAGE_PRIMARY_KEY_STRING_KEY string = storage.outputs.storagePrimaryKeyConnectionStringKey
 

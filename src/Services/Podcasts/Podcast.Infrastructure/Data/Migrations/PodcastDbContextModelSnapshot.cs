@@ -26,11 +26,11 @@ namespace Podcast.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Genre")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.HasKey("Id");
 
@@ -73,32 +73,32 @@ namespace Podcast.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<TimeSpan?>("Duration")
                         .HasColumnType("time");
 
                     b.Property<string>("Explicit")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<DateTime>("Published")
-                        .HasColumnType("datetime2");
+                        .HasColumnType(DateTimeTypeName);
 
                     b.Property<Guid>("ShowId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.HasKey("Id");
 
@@ -111,14 +111,14 @@ namespace Podcast.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<bool>("IsFeatured")
-                        .HasColumnType("bit");
+                        .HasColumnType(BoolTypeName);
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.HasKey("Id");
 
@@ -262,10 +262,10 @@ namespace Podcast.Infrastructure.Data.Migrations
             modelBuilder.Entity("Podcast.Infrastructure.Data.Models.FeedCategory", b =>
                 {
                     b.Property<Guid>("FeedId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.HasKey("FeedId", "CategoryId");
 
@@ -470,41 +470,41 @@ namespace Podcast.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Author")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<Guid>("FeedId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<string>("Language")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<string>("Link")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<DateTime>("Updated")
-                        .HasColumnType("datetime2");
+                        .HasColumnType(DateTimeTypeName);
 
                     b.HasKey("Id");
 
@@ -518,22 +518,22 @@ namespace Podcast.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Categories")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
+                        .HasColumnType(DateTimeTypeName);
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.HasKey("Id");
 

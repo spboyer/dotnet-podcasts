@@ -4,14 +4,16 @@ param tags object = {}
 
 param containerAppsEnvironmentName string = ''
 param containerName string = 'main'
-//param containerRegistryName string = 'shayne.azurecr.io'
 param env array = []
+param enableIngres bool = true
 param external bool = true
 param imageName string
 param keyVaultName string = ''
 param managedIdentity bool = !empty(keyVaultName)
 param targetPort int = 80
 param serviceBinds array = []
+param minReplicas int = 1
+param maxReplicas int = 1
 
 @description('CPU cores allocated to a single container instance, e.g. 0.5')
 param containerCpuCoreCount string = '0.5'
@@ -29,11 +31,11 @@ resource app 'Microsoft.App/containerApps@2022-11-01-preview' = {
     managedEnvironmentId: containerAppsEnvironment.id
     configuration: {
       activeRevisionsMode: 'single'
-      ingress: {
+      ingress: enableIngres ? {
         external: external
         targetPort: targetPort
         transport: 'auto'
-      }
+      } : null
     }
     template: {
       serviceBinds: serviceBinds
@@ -48,6 +50,10 @@ resource app 'Microsoft.App/containerApps@2022-11-01-preview' = {
           }
         }
       ]
+      scale: {
+        minReplicas: minReplicas
+        maxReplicas: maxReplicas
+      }
     }
   }
 }
@@ -56,13 +62,8 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2022-03-01'
   name: containerAppsEnvironmentName
 }
 
-// 2022-02-01-preview needed for anonymousPullEnabled
-//resource containerRegistry 'Microsoft.ContainerRegistry/registries@2022-02-01-preview' existing = {
-//  name: containerRegistryName
-//}
-
 output identityPrincipalId string = managedIdentity ? app.identity.principalId : ''
 output imageName string = imageName
 output name string = app.name
-output uri string = 'https://${app.properties.configuration.ingress.fqdn}'
+output uri string = enableIngres ? 'https://${app.properties.configuration.ingress.fqdn}' : ''
 output appId string = app.id

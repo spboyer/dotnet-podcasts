@@ -4,16 +4,12 @@ using System.Threading.RateLimiting;
 using Asp.Versioning;
 using Asp.Versioning.Conventions;
 using Azure.Monitor.OpenTelemetry.Exporter;
-using Azure.Storage.Queues;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Podcast.API.Routes;
-using Podcast.Infrastructure.Data;
+using Podcast.Infrastructure;
 using Podcast.Infrastructure.Http;
-using Podcast.Infrastructure.Http.Feeds;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.Identity.Web;
 
@@ -21,11 +17,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Database and storage related-services
 var credential = new ChainedTokenCredential(new AzureDeveloperCliCredential(), new DefaultAzureCredential());
+builder.Services.AddSql<PodcastDbContext>(builder.Configuration, new SqlConfig
+{
+    RetryOnFailure = true,
+    RetryCount = 5,
+    RetryDelay = TimeSpan.FromSeconds(30),
+    CommandTimeout = 10,
+});
 builder.Configuration.AddAzureKeyVault(new Uri(builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"]), credential);
-var dbConnectionString = builder.Configuration[builder.Configuration["AZURE_API_SQL_CONNECTION_STRING_KEY"]] ?? throw new InvalidOperationException("Missing connection string configuration");
-//builder.Services.AddSqlServer<PodcastDbContext>(dbConnectionString);
-builder.Services.AddNpgsql<PodcastDbContext>(dbConnectionString);
-
 var queueConnectionString = builder.Configuration[builder.Configuration["AZURE_FEED_QUEUE_CONNECTION_STRING_KEY"]] ?? throw new InvalidOperationException("Missing feed queue configuration");
 builder.Services.AddSingleton(new QueueClient(queueConnectionString, "feed-queue"));
 builder.Services.AddHttpClient<IFeedClient, FeedClient>();
@@ -73,9 +72,9 @@ builder.Services.AddRateLimiter(options => options.AddFixedWindowLimiter("feeds"
 var serviceName = builder.Environment.ApplicationName;
 var serviceVersion = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion;
 var serviceResource =
-        ResourceBuilder
-         .CreateDefault()
-         .AddService(serviceName: serviceName, serviceVersion: serviceVersion);
+    ResourceBuilder
+        .CreateDefault()
+        .AddService(serviceName: serviceName, serviceVersion: serviceVersion);
 
 var azureMonitorConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
 
@@ -86,45 +85,45 @@ if (enableMonitor)
 
     builder.Services.AddOpenTelemetryTracing(tracing =>
         tracing.SetResourceBuilder(serviceResource)
-        .AddAzureMonitorTraceExporter(o =>
-        {
-            o.ConnectionString = azureMonitorConnectionString;
-        })
-        .AddJaegerExporter()
-        .AddHttpClientInstrumentation()
-        .AddAspNetCoreInstrumentation()
-        .AddEntityFrameworkCoreInstrumentation()
+            .AddAzureMonitorTraceExporter(o =>
+            {
+                o.ConnectionString = azureMonitorConnectionString;
+            })
+            .AddJaegerExporter()
+            .AddHttpClientInstrumentation()
+            .AddAspNetCoreInstrumentation()
+            .AddEntityFrameworkCoreInstrumentation()
     );
 
     builder.Services.AddOpenTelemetryMetrics(metrics =>
     {
         metrics
-        .SetResourceBuilder(serviceResource)
-        .AddPrometheusExporter()
-        .AddAzureMonitorMetricExporter(o =>
-        {
-            o.ConnectionString = azureMonitorConnectionString;
-        })
-        .AddAspNetCoreInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddRuntimeInstrumentation()
-        .AddProcessInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddEventCountersInstrumentation(ec =>
-        {
-            ec.AddEventSources("Microsoft.AspNetCore.Hosting");
-        });
+            .SetResourceBuilder(serviceResource)
+            .AddPrometheusExporter()
+            .AddAzureMonitorMetricExporter(o =>
+            {
+                o.ConnectionString = azureMonitorConnectionString;
+            })
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddRuntimeInstrumentation()
+            .AddProcessInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddEventCountersInstrumentation(ec =>
+            {
+                ec.AddEventSources("Microsoft.AspNetCore.Hosting");
+            });
     });
 
     builder.Logging.AddOpenTelemetry(logging =>
     {
         logging
-        .SetResourceBuilder(serviceResource)
-        .AddAzureMonitorLogExporter(o =>
-        {
-            o.ConnectionString = azureMonitorConnectionString;
-        })
-        .AttachLogsToActivityEvent();
+            .SetResourceBuilder(serviceResource)
+            .AddAzureMonitorLogExporter(o =>
+            {
+                o.ConnectionString = azureMonitorConnectionString;
+            })
+            .AttachLogsToActivityEvent();
     });
 }
 
@@ -149,10 +148,10 @@ if (enableMonitor)
 app.MapGet("/version", () => serviceVersion);
 
 var versionSet = app.NewApiVersionSet()
-                    .HasApiVersion(1.0)
-                    .HasApiVersion(2.0)
-                    .ReportApiVersions()
-                    .Build();
+    .HasApiVersion(1.0)
+    .HasApiVersion(2.0)
+    .ReportApiVersions()
+    .Build();
 
 var shows = app.MapGroup("/shows");
 var categories = app.MapGroup("/categories");

@@ -3,13 +3,13 @@ param name string
 param location string = resourceGroup().location
 param tags object = {}
 param containerAppsEnvironmentName string
-// param containerRegistryName string
 param imageName string = ''
 param keyVaultName string
 param feedQueueConnectionStringKey string
-param dbConnectionStringKey string
 param keyVaultEndpoint string
 param applicationInsightsConnectionString string
+param dataStore string
+param serviceBinds array = []
 
 var serviceName = 'ingestion'
 
@@ -20,17 +20,17 @@ module app 'core/host/container-app.bicep' = {
     location: location
     tags: union(tags, { 'azd-service-name': serviceName })
     containerAppsEnvironmentName: containerAppsEnvironmentName
-//    containerRegistryName: containerRegistryName
     containerCpuCoreCount: '1.0'
     containerMemory: '2.0Gi'
+    enableIngres: false
     env: [
+      {
+        name: 'DATA_STORE'
+        value: dataStore
+      }
       {
         name: 'AZURE_FEED_QUEUE_CONNECTION_STRING_KEY'
         value: feedQueueConnectionStringKey
-      }
-      {
-        name: 'AZURE_API_SQL_CONNECTION_STRING_KEY'
-        value: dbConnectionStringKey
       }
       {
         name: 'AZURE_KEY_VAULT_ENDPOINT'
@@ -47,6 +47,7 @@ module app 'core/host/container-app.bicep' = {
     ]
     imageName: !empty(imageName) ? imageName : 'nginx:latest'
     keyVaultName: keyVault.name
+    serviceBinds: serviceBinds
   }
 }
 
@@ -64,5 +65,4 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
 
 output SERVICE_INGESTION_IDENTITY_PRINCIPAL_ID string = app.outputs.identityPrincipalId
 output SERVICE_INGESTION_NAME string = app.outputs.name
-output SERVICE_INGESTION_URI string = app.outputs.uri
 output SERVICE_INGESTION_IMAGE_NAME string = app.outputs.imageName

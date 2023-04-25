@@ -29,31 +29,31 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<TimeSpan?>("Duration")
                         .HasColumnType("time");
 
                     b.Property<Guid>("EpisodeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<DateTime>("Published")
-                        .HasColumnType("datetime2");
+                        .HasColumnType(DateTimeTypeName);
 
                     b.Property<Guid>("ShowId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.HasKey("Id");
 
@@ -65,10 +65,10 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
             modelBuilder.Entity("ListenTogether.Hub.Infrastructure.Data.Models.Room", b =>
                 {
                     b.Property<string>("Code")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<Guid>("EpisodeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<int>("PlayerState")
                         .HasColumnType("int");
@@ -77,7 +77,7 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                         .HasColumnType("time");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType(DateTimeTypeName);
 
                     b.HasKey("Code");
 
@@ -90,22 +90,22 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Author")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<Guid>("ShowId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.HasKey("Id");
 
@@ -116,18 +116,18 @@ namespace ListenTogether.Hub.Infrastructure.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType(IdTypeName);
 
                     b.Property<string>("ConnectionId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType(StringTypeName);
 
                     b.Property<string>("RoomCode")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType(StringTypeName);
 
                     b.HasKey("Id");
 

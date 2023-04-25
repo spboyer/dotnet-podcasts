@@ -1,16 +1,15 @@
-
 param name string
 param location string = resourceGroup().location
 param tags object = {}
 param keyVaultName string
 param containerAppsEnvironmentName string
-//param containerRegistryName string
 param imageName string
 param keyVaultEndpoint string
 param applicationInsightsConnectionString string
-param dbConnectionStringKey string
 param orleansStorageConnectionStringKey string
 param apiBaseUrl string
+param dataStore string
+param serviceBinds array = []
 
 var serviceName = 'hub'
 
@@ -21,12 +20,15 @@ module app 'core/host/container-app.bicep' = {
     location: location
     tags: union(tags, { 'azd-service-name': serviceName })
     containerAppsEnvironmentName: containerAppsEnvironmentName
-//    containerRegistryName: containerRegistryName
     containerCpuCoreCount: '1.0'
     containerMemory: '2.0Gi'
     imageName: !empty(imageName) ? imageName : 'nginx:latest'
     keyVaultName: keyVault.name
     env: [
+      {
+        name: 'DATA_STORE'
+        value: dataStore
+      }
       {
         name: 'AZURE_KEY_VAULT_ENDPOINT'
         value: keyVaultEndpoint
@@ -34,10 +36,6 @@ module app 'core/host/container-app.bicep' = {
       {
         name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
         value: applicationInsightsConnectionString
-      }
-      {
-        name: 'AZURE_HUB_SQL_CONNECTION_STRING_KEY'
-        value: dbConnectionStringKey
       }
       {
         name: 'AZURE_ORLEANS_STORAGE_CONNECTION_STRING_KEY'
@@ -52,6 +50,7 @@ module app 'core/host/container-app.bicep' = {
         value: 'Development'
       }
     ]
+    serviceBinds: serviceBinds
   }
 }
 
